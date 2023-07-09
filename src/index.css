@@ -12,3 +12,18 @@
   --main-color: #DCAC00;
   --main-dark: #AE8800;
 }
+
+.sbmt-btn {
+  background-color: var(--main-color);
+  border: 2px solid var(--main-dark);
+  border-radius: 50px;
+  color: white;
+  font-size: 22px;
+  font-weight: 500;
+  width: 273px;
+  height: 54px;
+}
+
+.sbmt-btn:active {
+  background-color: var(--main-dark);
+}

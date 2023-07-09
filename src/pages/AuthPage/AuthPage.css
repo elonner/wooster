@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #EFD98B;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 80vw;
+    height: fit-content;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.form > img {
+    width: 60%;
+    align-self: center;
+}
+
+.form > h2 {
+    font-family: 'Lobster', cursive;
+    align-self: center;
+    font-size: 40px;
+    margin-top: -15px;
+    color: var(--main-dark);
+}
+
+.form > label {
+    font-weight: 300;
+    margin-top: 5px;
+}
+
+.form > input {
+    align-self: center;
+    width: 80%;
+    border: 1px solid grey;
+    border-radius: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+
+.form > button {
+    font-size: 20px;
+    width: 200px;
+    height: 40px;
+    align-self: center;
+    margin: 10px 0;
+}
+
+.form button:hover {
+    cursor: pointer;
+}
+
+.switchForms {
+    color: grey;
+}
+
+.switchLink {
+    text-decoration: underline;
+}
+
+.switchLink:hover {
+    cursor: pointer;
+}
+
+.switchForms {
+    align-self: center;
+}
+
+.error-message {
+    color: red;
+    position: absolute;
+    font-size: smaller;
+    bottom: 5px;
+    align-self: center;
+}

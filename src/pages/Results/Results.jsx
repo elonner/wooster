@@ -10,6 +10,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { useState, useRef, useEffect } from 'react';
+import descriptions from '../../descriptions';
 
 Chart.register(
     RadialLinearScale,
@@ -49,8 +50,10 @@ export default function Results() {
     const [showAverage, setShowAverage] = useState(false);
     const [data, setData] = useState({});
     const [moreInfo, setMoreInfo] = useState(false);
+    const [activeCat, setActiveCat] = useState('');
 
     const descriptionRef = useRef(null);
+    const tableRef = useRef(null);
     const chartRef = useRef(null); // allows to see chart elements and options
 
     useEffect(() => {
@@ -69,7 +72,7 @@ export default function Results() {
             'Alternative': 0.2
         });
         setFunName('Raging Baffoon');
-        setCode('AB');
+        setCode('CB');
     }, []);
 
     useEffect(() => {
@@ -77,6 +80,16 @@ export default function Results() {
         const chart = chartRef.current;
         if (chart) {
             console.log('ChartJS', chart);
+        }
+
+        // logic for setting active category 
+        let maxKey = '';
+        let maxVal = 0;
+        for (const [key, val] of Object.entries(result)) {
+            if (val > maxVal) {
+                maxVal = val;
+                maxKey = key;
+            }
         }
 
         if (!showAverage) {
@@ -110,15 +123,19 @@ export default function Results() {
                 ],
             });
         }
+        setActiveCat(maxKey);
     }, [result, showAverage])
 
     useEffect(() => {
+        console.log(tableRef.current?.clientHeight)
         if (moreInfo) {
             descriptionRef.current.style.position = 'absolute';
             descriptionRef.current.style.top = '0';
             descriptionRef.current.style.right = '0';
             descriptionRef.current.style.left = '0';
             descriptionRef.current.style.bottom = '0';
+            descriptionRef.current.style.width = '100%';
+            descriptionRef.current.style.height = `${tableRef.current?.clientHeight + 2}px`;
         } else {
             if (descriptionRef.current) {
                 descriptionRef.current.style.position = 'initial';
@@ -126,9 +143,11 @@ export default function Results() {
                 descriptionRef.current.style.right = 'initial';
                 descriptionRef.current.style.left = 'initial';
                 descriptionRef.current.style.bottom = 'initial';
+                descriptionRef.current.style.width = '0px';
+                descriptionRef.current.style.height = `${tableRef.current?.clientHeight + 2}px`;
             }
         }
-    }, [moreInfo]);
+    }, [result, moreInfo]);
 
     function share() {
 
@@ -150,13 +169,13 @@ export default function Results() {
                         <Radar data={data} options={options} ref={chartRef} />
                     </div>
                     <div className="info">
-                        <div className="table-container">
+                        <div ref={tableRef} className="table-container">
                             <table className="table">
                                 <tbody>
                                     {Object.entries(result).sort((a, b) => b[1] - a[1]).map((cat, idx) => {
                                         return (
                                             <tr key={idx}>
-                                                <td className="left-col">{cat[0]}</td>
+                                                <td onClick={() => setActiveCat(cat[0])} className="left-col">{cat[0]}</td>
                                                 <td>{cat[1].toFixed(2)}</td>
                                             </tr>
                                         );
@@ -165,11 +184,13 @@ export default function Results() {
                             </table>
                         </div>
                         <div onClick={() => setMoreInfo(!moreInfo)} ref={descriptionRef} className="description">
-
+                            <h3 className='desc-title'>{activeCat}</h3>
+                            <p className="desc-body">{descriptions[activeCat]}</p>
+                            <i className={`fa-solid plus ${moreInfo ? "fa-minus" : "fa-plus"}`}></i>
                         </div>
                     </div>
                     <div className="btn-container">
-                        <button onClick={share} className='share-btn'>Share Your Results!</button>
+                        <button onClick={share} className='sbmt-btn'>Share Your Results!</button>
                     </div>
                 </>
                 :

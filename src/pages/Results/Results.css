@@ -75,6 +75,10 @@ i:active {
     background-color: rgb(0, 0, 0, 0.06);
 }
 
+.table .left-col:active {
+    text-decoration: underline;
+}
+
 .table td {
     padding: 3px 10px;
     border: 1px solid #b9b9b9;
@@ -98,9 +102,33 @@ i:active {
 
 .description {
     background-color: #EFD98B;
+    position: relative;
     border-radius: 10px;
+    width: 0px;
+    height: 0px;
     flex-grow: 1;
     z-index: 1;
+    text-align: center;
+    padding: 5px;
+    overflow-y: hidden;
+}
+
+.description .desc-title {
+    text-decoration: underline;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.description .desc-body {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.plus {
+    position: absolute;
+    top: -17px;
+    right: -12px;
+    color: rgb(124, 124, 124);
 }
 
 .btn-container {
@@ -111,18 +139,3 @@ i:active {
     justify-content: center;
     z-index: 2; 
   }
-
-.share-btn {
-    background-color: var(--main-color);
-    border: 2px solid var(--main-dark);
-    border-radius: 50px;
-    color: white;
-    font-size: 22px;
-    font-weight: 500;
-    width: 273px;
-    height: 54px;
-}
-
-.share-btn:active {
-    background-color: var(--main-dark);
-}
