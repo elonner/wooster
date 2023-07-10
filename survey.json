@@ -1,0 +1,90 @@
+{
+    "sectionOne": [
+        {
+            "prod": "Seinfeld",
+            "rating": {"LowBrow": 1, "Coincidental": 2, "Critique": 0, "Witty": 2, "Alternative": 0},
+            "index": 0
+        }, {
+            "prod": "Family Guy",
+            "rating": {"LowBrow": 2, "Coincidental": 0, "Critique": 2, "Witty": 1, "Alternative": 0},
+            "index": 1
+        }, {
+            "prod": "Saturday Night Live",
+            "rating": {"LowBrow": 0, "Coincidental": 1, "Critique": 2, "Witty": 2, "Alternative": 0},
+            "index": 2
+        }
+    ],
+    "sectionTwo": [
+        {
+            "media": "https://www.boredpanda.com/blog/wp-content/uploads/2022/09/relatable-funny-memes-22-63284d45ebe28__700.jpg",
+            "rating": {"LowBrow": 1, "Coincidental": 0, "Critique": 0, "Witty": 1, "Alternative": 3},
+            "index": 3
+        }, {
+            "media": "https://pd-beamliving-cd.beamliving.com/-/media/14-to-bl/2021-funny-memes-cats-1000x666px.jpg",
+            "rating": {"LowBrow": 0, "Coincidental": 0, "Critique": 2, "Witty": 3, "Alternative": 0},
+            "index": 4
+        }, {
+            "media": "https://i1.sndcdn.com/avatars-000532708956-jsayvx-t240x240.jpg",
+            "rating": {"LowBrow": 0, "Coincidental": 1, "Critique": 1, "Witty": 1, "Alternative": 2},
+            "index": 5
+        }
+    ],
+    "sectionThree": [
+        {
+            "situation": "A coworker falls down",
+            "responses": [
+                {
+                    "response": "Offer assistance",
+                    "rating": {"LowBrow": 0, "Coincidental": 0, "Critique": 0, "Witty": 3, "Alternative": 2}
+                }, {
+                    "response": "Laugh out loud",
+                    "rating": {"LowBrow": 5, "Coincidental": 0, "Critique": 0, "Witty": 0, "Alternative": 0}
+                }, {
+                    "response": "Do nothing",
+                    "rating": {"LowBrow": 0, "Coincidental": 0, "Critique": 0, "Witty": 0, "Alternative": 5}
+                }, {
+                    "response": "Do both",
+                    "rating": {"LowBrow": 1, "Coincidental": 1, "Critique": 1, "Witty": 1, "Alternative": 1}
+                }
+            ],
+            "index": 6
+        }, {
+            "situation": "Your friend's dog dies",
+            "responses": [
+                {
+                    "response": "Offer condolences",
+                    "rating": {"LowBrow": 0, "Coincidental": 0, "Critique": 0, "Witty": 3, "Alternative": 2}
+                }, {
+                    "response": "Make jokes",
+                    "rating": {"LowBrow": 5, "Coincidental": 0, "Critique": 0, "Witty": 0, "Alternative": 0}
+                }, {
+                    "response": "Get them a new dog",
+                    "rating": {"LowBrow": 0, "Coincidental": 0, "Critique": 0, "Witty": 0, "Alternative": 5}
+                }, {
+                    "response": "Cry",
+                    "rating": {"LowBrow": 1, "Coincidental": 1, "Critique": 1, "Witty": 1, "Alternative": 1}
+                }
+            ],
+            "index": 7
+        }, {
+            "situation": "You shit your pants",
+            "responses": [
+                {
+                    "response": "Never show your face again",
+                    "rating": {"LowBrow": 0, "Coincidental": 0, "Critique": 0, "Witty": 3, "Alternative": 2}
+                }, {
+                    "response": "Tell everybody",
+                    "rating": {"LowBrow": 5, "Coincidental": 0, "Critique": 0, "Witty": 0, "Alternative": 0}
+                }, {
+                    "response": "Be awkward",
+                    "rating": {"LowBrow": 0, "Coincidental": 0, "Critique": 0, "Witty": 0, "Alternative": 5}
+                }, {
+                    "response": "Continue as if nothing happened",
+                    "rating": {"LowBrow": 1, "Coincidental": 1, "Critique": 1, "Witty": 1, "Alternative": 1}
+                }
+            ],
+            "index": 8
+        }
+    ],
+    "version": 1
+}

@@ -101,7 +101,7 @@ i:active {
 }
 
 .description {
-    background-color: #EFD98B;
+    background-color: var(--main-light);
     position: relative;
     border-radius: 10px;
     width: 0px;

@@ -36,7 +36,7 @@ export default function LogIn({ setUser, showLogin, setShowLogin }) {
         <div>
             <div className="form-container">
                 <form autoComplete="off" onSubmit={handleSubmit} className="form login">
-                    <img src="https://icons.iconarchive.com/icons/sykonist/looney-tunes/256/Foghorn-Leghorn-icon.png" alt="" srcset="" />
+                    <img src="https://icons.iconarchive.com/icons/sykonist/looney-tunes/256/Foghorn-Leghorn-icon.png" alt="" srcSet="" />
                     <h2 className='form-title'>Wooster</h2>
                     <label>Username:</label>
                     <input type="text" name="username" value={credentials.username} onChange={handleChange} required />
