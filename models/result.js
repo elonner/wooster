@@ -18,7 +18,8 @@ const resultSchema = new Schema({
     code: String,
     scores: scoresSchema,
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: { virtuals: true }
 });
 
 module.exports = mongoose.model('Result', resultSchema);

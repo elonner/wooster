@@ -127,7 +127,6 @@ export default function Results() {
     }, [result, showAverage])
 
     useEffect(() => {
-        console.log(tableRef.current?.clientHeight)
         if (moreInfo) {
             descriptionRef.current.style.position = 'absolute';
             descriptionRef.current.style.top = '0';

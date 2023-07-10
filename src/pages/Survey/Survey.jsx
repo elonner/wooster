@@ -4,6 +4,8 @@ import sendRequest from "../../utilities/send-request";
 import SecOneQues from "../../components/Questions/SecOneQues";
 import SecTwoQues from "../../components/Questions/SecTwoQues";
 import SecThreeQues from "../../components/Questions/SecThreeQues";
+import { getUser } from "../../utilities/users-service";
+import { newResult } from "../../utilities/results-api";
 import './Survey.css';
 
 export default function Survey() {
@@ -55,9 +57,11 @@ export default function Survey() {
         }
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault(); // don't think i need this as button is not type submit
-
+        const data = {user: getUser(), testVersion: survey.version, isPublic: !isPrivate, answers};
+        const result = await newResult(data);
+        console.log(result);
         navigate("/results")
     }
 
