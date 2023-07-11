@@ -12,11 +12,12 @@ const port = process.env.PORT || 4000;
 
 const app = express();
 
-app.use(cors());
+//app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(favicon(path.join(__dirname, 'build', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'build')));
+app.use(require('./config/checkToken'));
 
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/results', require('./routes/api/results'));
@@ -44,13 +45,13 @@ app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-const options = {
-  key: fs.readFileSync('./localhost-key.pem'),     
-  cert: fs.readFileSync('./localhost.pem'),    
-};
+// const options = {
+//   key: fs.readFileSync('./localhost-key.pem'),     
+//   cert: fs.readFileSync('./localhost.pem'),    
+// };
 
-const server = https.createServer(options, app);
+//const server = https.createServer(options, app);
 
-server.listen(port, function () {
+app.listen(port, function () {
     console.log(`Express app running on port ${port}`)
 });
