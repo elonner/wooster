@@ -152,7 +152,7 @@ export default function Results({ user }) {
             await navigator.share({
                 title: 'Wooster',
                 text: 'Discover your sense of humor!',
-                url: 'https://localhost:3000' // Replace with the URL you want to share
+                url: 'https://wooster-comedy-e5cd863c8ed6.herokuapp.com/' // Replace with the URL you want to share
             })
         } catch (err) {
             alert("This button doesn't work on your browser, just copy and paste the link instead.")
