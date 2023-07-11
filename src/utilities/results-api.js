@@ -5,18 +5,18 @@ export async function newResult(data) {
     return sendRequest(BASE_URL, 'POST', data);
 }
 
-export async function getAll(id) {
-    return sendRequest(`${BASE_URL}/${id}/all`);
+export async function getLatest(userId) {
+    return sendRequest(`${BASE_URL}/${userId}/latest`);
 }
 
-export async function getAllByUsername(username) {
-    return sendRequest(`${BASE_URL}/${username}/all`);
-}
+// export async function getAllByUsername(username) {
+//     return sendRequest(`${BASE_URL}/${username}/all`);
+// }
 
-export async function getOne(id) {
-    return sendRequest(`${BASE_URL}/${id}`);
-}
+// export async function getOne(id) {
+//     return sendRequest(`${BASE_URL}/${id}`);
+// }
 
-export async function getByUsername(username) {
-    return sendRequest(`${BASE_URL}/${username}`);
-}
+// export async function getMostRecent(username) {
+//     return sendRequest(`${BASE_URL}/${username}`);
+// }

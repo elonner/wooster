@@ -11,6 +11,7 @@ import {
 import { Radar } from 'react-chartjs-2';
 import { useState, useRef, useEffect } from 'react';
 import descriptions from '../../descriptions';
+import * as resultsApi from '../../utilities/results-api';
 
 Chart.register(
     RadialLinearScale,
@@ -42,7 +43,7 @@ const options = {
 }
 
 
-export default function Results() {
+export default function Results({user}) {
     const [funName, setFunName] = useState('');
     const [code, setCode] = useState('');
     const [result, setResult] = useState({});
@@ -51,19 +52,18 @@ export default function Results() {
     const [data, setData] = useState({});
     const [moreInfo, setMoreInfo] = useState(false);
     const [activeCat, setActiveCat] = useState('');
+    const [tempRes, setTempRes] = useState({});
 
     const descriptionRef = useRef(null);
     const tableRef = useRef(null);
     const chartRef = useRef(null); // allows to see chart elements and options
 
     useEffect(() => {
-        setResult({
-            'Low Brow': 0.10,
-            'Coincidental': 0.30,
-            'Critique': 0.55,
-            'Witty': 0.025,
-            'Alternative': 0.025
-        });
+        async function getResult() {
+            const res = await resultsApi.getLatest(user._id);
+            setResult(res.scores);
+        }
+        getResult();
         setAverage({
             'Low Brow': 0.2,
             'Coincidental': 0.2,
@@ -97,7 +97,7 @@ export default function Results() {
                 labels: ['A', 'B', 'C', 'D', 'E'],
                 datasets: [
                     {
-                        data: Object.values(result),
+                        data: getValues(result),
                         backgroundColor: 'rgba(220, 172, 0, 0.5)',
                         borderColor: 'rgba(220, 172, 0, 1)',
                         borderWidth: 2,
@@ -109,13 +109,13 @@ export default function Results() {
                 labels: ['A', 'B', 'C', 'D', 'E'],
                 datasets: [
                     {
-                        data: Object.values(result),
+                        data: getValues(result),
                         backgroundColor: 'rgba(220, 172, 0, 0.5)',
                         borderColor: 'rgba(220, 172, 0, 1)',
                         borderWidth: 2,
                     }, {
                         label: '',
-                        data: Object.values(average),
+                        data: getValues(average),
                         backgroundColor: 'rgba(45, 107, 214, 0.35)',
                         borderColor: 'rgba(45, 107, 214, 0.8)',
                         borderWidth: 2,
@@ -126,6 +126,7 @@ export default function Results() {
         setActiveCat(maxKey);
     }, [result, showAverage])
 
+    // styling for description
     useEffect(() => {
         if (moreInfo) {
             descriptionRef.current.style.position = 'absolute';
@@ -150,6 +151,17 @@ export default function Results() {
 
     function share() {
 
+    }
+
+    // returns array of score object values ensuring correct order
+    function getValues(obj) {
+        const vals = [];
+        vals.push(obj['Low Brow']);
+        vals.push(obj['Coincidental']);
+        vals.push(obj['Critique']);
+        vals.push(obj['Witty']);
+        vals.push(obj['Alternative']);
+        return vals;
     }
 
     return (
