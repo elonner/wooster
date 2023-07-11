@@ -9,6 +9,10 @@ export async function getLatest(userId) {
     return sendRequest(`${BASE_URL}/${userId}/latest`);
 }
 
+export async function getAverage() {
+    return sendRequest(`${BASE_URL}/average`);
+}
+
 // export async function getAllByUsername(username) {
 //     return sendRequest(`${BASE_URL}/${username}/all`);
 // }

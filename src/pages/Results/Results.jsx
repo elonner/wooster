@@ -52,7 +52,6 @@ export default function Results({user}) {
     const [data, setData] = useState({});
     const [moreInfo, setMoreInfo] = useState(false);
     const [activeCat, setActiveCat] = useState('');
-    const [tempRes, setTempRes] = useState({});
 
     const descriptionRef = useRef(null);
     const tableRef = useRef(null);
@@ -62,17 +61,15 @@ export default function Results({user}) {
         async function getResult() {
             const res = await resultsApi.getLatest(user._id);
             setResult(res.scores);
+            setCode(res.code);
+        }
+        async function getAverage() {
+            const avg = await resultsApi.getAverage();
+            setAverage(avg);
         }
         getResult();
-        setAverage({
-            'Low Brow': 0.2,
-            'Coincidental': 0.2,
-            'Critique': 0.2,
-            'Witty': 0.2,
-            'Alternative': 0.2
-        });
+        getAverage();
         setFunName('Raging Baffoon');
-        setCode('CB');
     }, []);
 
     useEffect(() => {
