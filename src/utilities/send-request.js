@@ -1,6 +1,6 @@
 import { getToken } from './users-service';
 
-const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_SERVER_URL : 'http://localhost:4000'
+const BASE_URL = process.env.NODE_ENV === 'production' ? '' : 'https://localhost:4000'
 
 export default async function sendRequest(url, method = 'GET', payload = null) {
   // Fetch accepts an options object as the 2nd argument
@@ -19,7 +19,7 @@ export default async function sendRequest(url, method = 'GET', payload = null) {
     // options.headers = options.headers || {};
     options.headers.Authorization = `Bearer ${token}`;
   }
-  const res = await fetch(url, options);
+  const res = await fetch(BASE_URL + url, options);
   // if res.ok is false then something went wrong
   if (res.ok) return res.json();
   throw new Error('Bad Request');

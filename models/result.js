@@ -75,7 +75,6 @@ resultSchema.virtual('code').get(function () {
     };
     const sorted = Object.entries(this.scores).sort((a, b) => b[1] - a[1]);
     let code = '';
-    console.log(codes[sorted[0][0]] + codes[sorted[1][0]]);
     if (sorted[0][1] > 2*sorted[1][1]) {
         code = codes[sorted[0][0]]
     } else if (sorted[0][1] > 1.5*sorted[2][1] && sorted[1][1] > 1.5*sorted[2][1]) {

@@ -1,8 +1,10 @@
 const express = require('express');
 const path = require('path');
+const https = require('https');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const fs = require('fs');
+const cors = require('cors');
 require('dotenv').config();
 require('./config/database');
 
@@ -10,6 +12,7 @@ const port = process.env.PORT || 4000;
 
 const app = express();
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(favicon(path.join(__dirname, 'build', 'favicon.ico')));
@@ -41,6 +44,13 @@ app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.listen(port, function () {
+const options = {
+  key: fs.readFileSync('./localhost-key.pem'),     
+  cert: fs.readFileSync('./localhost.pem'),    
+};
+
+const server = https.createServer(options, app);
+
+server.listen(port, function () {
     console.log(`Express app running on port ${port}`)
 });

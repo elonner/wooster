@@ -43,7 +43,7 @@ const options = {
 }
 
 
-export default function Results({user}) {
+export default function Results({ user }) {
     const [funName, setFunName] = useState('');
     const [code, setCode] = useState('');
     const [result, setResult] = useState({});
@@ -62,6 +62,7 @@ export default function Results({user}) {
             const res = await resultsApi.getLatest(user._id);
             setResult(res.scores);
             setCode(res.code);
+            setFunName('Raging Baffoon');
         }
         async function getAverage() {
             const avg = await resultsApi.getAverage();
@@ -69,9 +70,9 @@ export default function Results({user}) {
         }
         getResult();
         getAverage();
-        setFunName('Raging Baffoon');
     }, []);
 
+    // sets active category and data
     useEffect(() => {
         // testing
         const chart = chartRef.current;
@@ -146,8 +147,17 @@ export default function Results({user}) {
         }
     }, [result, moreInfo]);
 
-    function share() {
-
+    async function share() {
+        try {
+            await navigator.share({
+                title: 'Wooster',
+                text: 'Discover your sense of humor!',
+                url: 'https://localhost:3000' // Replace with the URL you want to share
+            })
+        } catch (err) {
+            alert("This button doesn't work on your browser, just copy and paste the link instead.")
+            console.log(err);
+        }
     }
 
     // returns array of score object values ensuring correct order
