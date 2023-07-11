@@ -106,7 +106,8 @@ function normalizeData(secTot) {
     const min = Math.min(...secTot);
     secTot = secTot.map(n => n - min);
     const sum = secTot.reduce((acc, curr) => acc + curr, 0); 
-    secTot = secTot.map(n => n / sum);
+    console.log(sum);
+    if (sum > 0) secTot = secTot.map(n => n / sum);
     return secTot;
 }
 

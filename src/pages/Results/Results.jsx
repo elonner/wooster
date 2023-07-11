@@ -190,6 +190,7 @@ export default function Results({ user }) {
                         <div ref={tableRef} className="table-container">
                             <table className="table">
                                 <tbody>
+                                    {console.log(result)}
                                     {Object.entries(result).sort((a, b) => b[1] - a[1]).map((cat, idx) => {
                                         return (
                                             <tr key={idx}>
