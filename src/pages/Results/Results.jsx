@@ -8,10 +8,11 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Radar } from 'react-chartjs-2';
 import { useState, useRef, useEffect } from 'react';
 import descriptions from '../../descriptions';
+import * as usersApi from '../../utilities/users-api';
 import * as resultsApi from '../../utilities/results-api';
 import * as usersServices from '../../utilities/users-service'
 
@@ -49,10 +50,14 @@ export default function Results({ user }) {
     const { id } = useParams();
     const [funName, setFunName] = useState('');
     const [code, setCode] = useState('');
+    const [name, setName] = useState('you are');
     const [result, setResult] = useState({});
     const [resultId, setResultId] = useState(0);
     const [average, setAverage] = useState({});
+    const [toCompare, setToCompare] = useState(null);
     const [showAverage, setShowAverage] = useState(false);
+    const [showCompare, setShowCompare] = useState(false);
+    const [compName, setCompName] = useState('');
     const [data, setData] = useState({});
     const [moreInfo, setMoreInfo] = useState(false);
     const [activeCat, setActiveCat] = useState('');
@@ -62,11 +67,28 @@ export default function Results({ user }) {
     const chartRef = useRef(null); // allows to see chart elements and options
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         async function getResult() {
+            
+            // upon recieved results
             let res;
-            id ? res = await resultsApi.getOne(id) : res = await resultsApi.getLatest(user._id);
+            if (id) {
+                res = await resultsApi.getOne(id);
+                const user = await usersApi.getOne(res.user);
+                setName(`${user.first} is`);
+            } else {
+                res = await resultsApi.getLatest(user._id);
+            }
+
+            // after survey completion
+            if (location.state) {
+                const toComp = await resultsApi.getOne(location.state.id);
+                const compUser = await usersApi.getOne(toComp.user);
+                setCompName(`${compUser.first}`);
+                setToCompare(toComp.scores);
+            }
             setResultId(res._id)
             setResult(res.scores);
             setCode(res.code);
@@ -98,39 +120,38 @@ export default function Results({ user }) {
             }
         }
 
-        if (!showAverage) {
-            setData({
-                labels: ['A', 'B', 'C', 'D', 'E'],
-                datasets: [
-                    {
-                        data: getValues(result),
-                        backgroundColor: 'rgba(220, 172, 0, 0.5)',
-                        borderColor: 'rgba(220, 172, 0, 1)',
-                        borderWidth: 2,
-                    },
-                ],
-            });
-        } else {
-            setData({
-                labels: ['A', 'B', 'C', 'D', 'E'],
-                datasets: [
-                    {
-                        data: getValues(result),
-                        backgroundColor: 'rgba(220, 172, 0, 0.5)',
-                        borderColor: 'rgba(220, 172, 0, 1)',
-                        borderWidth: 2,
-                    }, {
-                        label: '',
-                        data: getValues(average),
-                        backgroundColor: 'rgba(45, 107, 214, 0.35)',
-                        borderColor: 'rgba(45, 107, 214, 0.8)',
-                        borderWidth: 2,
-                    }
-                ],
+        const datasets = [
+            {
+                data: getValues(result),
+                backgroundColor: 'rgba(220, 172, 0, 0.5)',
+                borderColor: 'rgba(220, 172, 0, 1)',
+                borderWidth: 2
+            },
+        ];
+        if (showAverage) {
+            datasets.push({
+                label: '',
+                data: getValues(average),
+                backgroundColor: 'rgba(45, 107, 214, 0.35)',
+                borderColor: 'rgba(45, 107, 214, 0.8)',
+                borderWidth: 2
             });
         }
+        if (showCompare) {
+            datasets.push({
+                label: '',
+                data: getValues(toCompare),
+                backgroundColor: 'rgba(255, 0, 0, 0.3)',
+                borderColor: 'rgba(255, 50, 50, 0.7)',
+                borderWidth: 2
+            });
+        }
+        setData({
+            labels: ['A', 'B', 'C', 'D', 'E'],
+            datasets: datasets
+        })
         setActiveCat(maxKey);
-    }, [result, showAverage])
+    }, [result, showAverage, showCompare])
 
     // styling for description
     useEffect(() => {
@@ -156,7 +177,6 @@ export default function Results({ user }) {
     }, [result, moreInfo]);
 
     async function share() {
-        console.log(result)
         try {
             await navigator.share({
                 title: 'Wooster',
@@ -184,13 +204,29 @@ export default function Results({ user }) {
             {data && funName && code ?
                 <>
                     <i onClick={share} className="fa-solid fa-share-from-square fa-2x"></i>
-                    <p id="you-are">you are a...</p>
+                    <p id="you-are">{`${name} a...`}</p>
                     <h1 id="fun-name">{funName}</h1>
                     <h5 id="code">{code}</h5>
-                    <label id='show-avg-label'>
-                        <input onChange={() => setShowAverage(!showAverage)} id='show-avg-input' type="checkbox" />
+                    <label className='compare-label average'>
+                        <input 
+                            onChange={() => setShowAverage(!showAverage)} 
+                            className='compare-input average' 
+                            type="checkbox" 
+                        />
                         show average
                     </label>
+                    {toCompare ?
+                        <label className='compare-label user'>
+                            <input 
+                                onChange={() => setShowCompare(!showCompare)} 
+                                className='compare-input user' 
+                                type="checkbox" 
+                                />
+                            {compName}
+                        </label>
+                        :
+                        null
+                    }
                     <div id="radar">
                         <Radar data={data} options={options} ref={chartRef} />
                     </div>
@@ -217,7 +253,7 @@ export default function Results({ user }) {
                     </div>
                     {id ?
                         <div className="btn-container">
-                            <button onClick={() => navigate('/survey')} className='sbmt-btn'>Take Quiz!</button>
+                            <button onClick={() => navigate('/survey', { state: { id: id } })} className='sbmt-btn'>Take Quiz!</button>
                         </div>
                         :
                         <div className="btn-container">

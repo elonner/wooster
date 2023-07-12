@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate , useLocation} from "react-router-dom";
 import sendRequest from "../../utilities/send-request";
 import SecOneQues from "../../components/Questions/SecOneQues";
 import SecTwoQues from "../../components/Questions/SecTwoQues";
@@ -14,6 +14,9 @@ export default function Survey() {
     const [answers, setAnswers] = useState([]);
     const [isPrivate, setIsPrivate] = useState(false);
     const navigate = useNavigate();
+
+    const location = useLocation();
+    console.log(location);
 
     const formRef1 = useRef();
     const formRef2 = useRef();
@@ -61,8 +64,8 @@ export default function Survey() {
         e.preventDefault(); // don't think i need this as button is not type submit
         const data = {user: getUser(), testVersion: survey.version, isPublic: !isPrivate, answers};
         const result = await newResult(data);
-        console.log(result);
-        navigate("/results")
+        location.state ? navigate("/results", {state: { id: location.state.id }})
+                       : navigate("/results");
     }
 
     if (!survey) return 'fetching data';

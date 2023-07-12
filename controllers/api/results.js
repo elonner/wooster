@@ -28,7 +28,6 @@ async function latest(req, res) {
 
 async function detail(req, res) {
     try {
-        console.log(req.params.id);
         const result = await Result.findOne({ _id: req.params.id });
         res.json(result);
     } catch (err) {

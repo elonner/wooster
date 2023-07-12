@@ -1,7 +1,7 @@
 import Results from '../pages/Results/Results'
 import Survey from '../pages/Survey/Survey'
 import AuthPage from '../pages/AuthPage/AuthPage';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { getUser } from '../utilities/users-service';
 

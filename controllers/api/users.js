@@ -44,7 +44,8 @@ async function index(req, res) {
 
 async function detail(req, res) {
     try {
-        
+        const user = await User.findOne({ _id: req.params.id });
+        res.json(user);
     } catch (err) {
         res.status(400).json(err);
     }
