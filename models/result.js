@@ -75,9 +75,9 @@ resultSchema.virtual('code').get(function () {
     };
     const sorted = Object.entries(this.scores).sort((a, b) => b[1] - a[1]);
     let code = '';
-    if (sorted[0][1] > 2*sorted[1][1]) {
+    if (sorted[0][1] >= 2*sorted[1][1]) {
         code = codes[sorted[0][0]]
-    } else if (sorted[0][1] > 1.5*sorted[2][1] && sorted[1][1] > 1.5*sorted[2][1]) {
+    } else if (sorted[0][1] >= 1.5*sorted[2][1] && sorted[1][1] > 1.5*sorted[2][1]) {
         code = codes[sorted[0][0]] + codes[sorted[1][0]];
     } else {
         code = codes[sorted[0][0]] + codes[sorted[1][0]] + codes[sorted[2][0]];
@@ -106,7 +106,6 @@ function normalizeData(secTot) {
     const min = Math.min(...secTot);
     secTot = secTot.map(n => n - min);
     const sum = secTot.reduce((acc, curr) => acc + curr, 0); 
-    console.log(sum);
     if (sum > 0) secTot = secTot.map(n => n / sum);
     return secTot;
 }

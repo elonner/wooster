@@ -3,7 +3,8 @@ const Result = require('../../models/result');
 module.exports = {
     create,
     latest,
-    average
+    average,
+    detail
 };
 
 async function create(req, res) {
@@ -18,6 +19,17 @@ async function create(req, res) {
 async function latest(req, res) {
     try {
         const result = await Result.findOne({ user: req.params.userId }, null, { sort: { createdAt: -1 } });
+        res.json(result);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json(err);
+    }
+}
+
+async function detail(req, res) {
+    try {
+        console.log(req.params.id);
+        const result = await Result.findOne({ _id: req.params.id });
         res.json(result);
     } catch (err) {
         console.log(err);

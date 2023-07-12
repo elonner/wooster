@@ -7,6 +7,8 @@ const ensureLoggedIn = require('../../config/ensureLoggedIn');
 router.post('/', resultsCtrl.create);
 // GET /api/results/average
 router.get('/average', resultsCtrl.average);
+// GET /api/results/:id
+router.get('/:id', resultsCtrl.detail);
 // GET /api/results/:userId/latest
 router.get('/:userId/latest', resultsCtrl.latest);
 

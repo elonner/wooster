@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as usersService from '../../utilities/users-service';
+import * as resultsAPI from '../../utilities/results-api';
 import '../../pages/AuthPage/AuthPage.css';
 
 export default function LogIn({ setUser, showLogin, setShowLogin }) {
@@ -24,8 +25,9 @@ export default function LogIn({ setUser, showLogin, setShowLogin }) {
             // will resolve to the user object included in the
             // payload of the JSON Web Token (JWT)
             const user = await usersService.login(credentials);
-            setUser(user);
-            navigate('/survey');
+            const survey = await resultsAPI.getLatest(user._id);
+            setUser(user); 
+            survey ? navigate('/results') : navigate('/survey');
         } catch (err) {
             console.log(err)
             setError('Log In Failed - Try Again');

@@ -8,6 +8,7 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Radar } from 'react-chartjs-2';
 import { useState, useRef, useEffect } from 'react';
 import descriptions from '../../descriptions';
@@ -45,9 +46,11 @@ const options = {
 
 
 export default function Results({ user }) {
+    const { id } = useParams();
     const [funName, setFunName] = useState('');
     const [code, setCode] = useState('');
     const [result, setResult] = useState({});
+    const [resultId, setResultId] = useState(0);
     const [average, setAverage] = useState({});
     const [showAverage, setShowAverage] = useState(false);
     const [data, setData] = useState({});
@@ -58,9 +61,13 @@ export default function Results({ user }) {
     const tableRef = useRef(null);
     const chartRef = useRef(null); // allows to see chart elements and options
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         async function getResult() {
-            const res = await resultsApi.getLatest(user._id);
+            let res;
+            id ? res = await resultsApi.getOne(id) : res = await resultsApi.getLatest(user._id);
+            setResultId(res._id)
             setResult(res.scores);
             setCode(res.code);
             setFunName('Raging Baffoon');
@@ -149,14 +156,14 @@ export default function Results({ user }) {
     }, [result, moreInfo]);
 
     async function share() {
+        console.log(result)
         try {
             await navigator.share({
                 title: 'Wooster',
                 text: 'Discover your sense of humor!',
-                url: 'https://wooster-comedy-e5cd863c8ed6.herokuapp.com/' // Replace with the URL you want to share
+                url: `https://wooster-comedy-e5cd863c8ed6.herokuapp.com/${resultId}` // Replace with the URL you want to share
             })
         } catch (err) {
-            alert("This button doesn't work on your browser, just copy and paste the link instead.")
             console.log(err);
         }
     }
@@ -208,9 +215,15 @@ export default function Results({ user }) {
                             <i className={`fa-solid plus ${moreInfo ? "fa-minus" : "fa-plus"}`}></i>
                         </div>
                     </div>
-                    <div className="btn-container">
-                        <button onClick={share} className='sbmt-btn'>Share Your Results!</button>
-                    </div>
+                    {id ?
+                        <div className="btn-container">
+                            <button onClick={() => navigate('/survey')} className='sbmt-btn'>Take Quiz!</button>
+                        </div>
+                        :
+                        <div className="btn-container">
+                            <button onClick={share} className='sbmt-btn'>Share Your Results!</button>
+                        </div>
+                    }
                 </>
                 :
                 <>

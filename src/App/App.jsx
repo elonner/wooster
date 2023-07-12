@@ -12,12 +12,16 @@ export default function App() {
     <main className="App">
       {user ?
         <Routes>
+          <Route path='/results/:id' element={<Results user={user} />} />
           <Route path='/results' element={<Results user={user} />} />
           <Route path="/survey" element={<Survey />} />
           <Route path="/*" element={<Survey />} />
         </Routes>
         :
-        <AuthPage setUser={setUser} />
+        <Routes>
+          <Route path='/results/:id' element={<Results user={user} />} />
+          <Route path="/*" element={<AuthPage setUser={setUser} />} />
+        </Routes>
       }
     </main>
   );

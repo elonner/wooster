@@ -17,9 +17,9 @@ export async function getAverage() {
 //     return sendRequest(`${BASE_URL}/${username}/all`);
 // }
 
-// export async function getOne(id) {
-//     return sendRequest(`${BASE_URL}/${id}`);
-// }
+export async function getOne(id) {
+    return sendRequest(`${BASE_URL}/${id}`);
+}
 
 // export async function getMostRecent(username) {
 //     return sendRequest(`${BASE_URL}/${username}`);
