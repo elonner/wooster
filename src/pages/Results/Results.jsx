@@ -71,7 +71,6 @@ export default function Results({ user }) {
 
     useEffect(() => {
         async function getResult() {
-            
             // upon recieved results
             let res;
             if (id) {
@@ -83,7 +82,7 @@ export default function Results({ user }) {
             }
 
             // after survey completion
-            if (location.state) {
+            if (location.state?.id) {
                 const toComp = await resultsApi.getOne(location.state.id);
                 const compUser = await usersApi.getOne(toComp.user);
                 setCompName(`${compUser.first}`);
