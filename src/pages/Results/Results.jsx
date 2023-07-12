@@ -12,6 +12,7 @@ import { Radar } from 'react-chartjs-2';
 import { useState, useRef, useEffect } from 'react';
 import descriptions from '../../descriptions';
 import * as resultsApi from '../../utilities/results-api';
+import * as usersServices from '../../utilities/users-service'
 
 Chart.register(
     RadialLinearScale,
@@ -190,7 +191,6 @@ export default function Results({ user }) {
                         <div ref={tableRef} className="table-container">
                             <table className="table">
                                 <tbody>
-                                    {console.log(result)}
                                     {Object.entries(result).sort((a, b) => b[1] - a[1]).map((cat, idx) => {
                                         return (
                                             <tr key={idx}>
@@ -213,7 +213,10 @@ export default function Results({ user }) {
                     </div>
                 </>
                 :
-                <p>fetching data</p>
+                <>
+                    <p>fetching data</p>
+                    <p>if this is taking too long click <span onClick={() => usersServices.logOut()}>here</span></p>
+                </>
             }
         </div >
     );
