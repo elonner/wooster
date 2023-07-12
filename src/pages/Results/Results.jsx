@@ -47,7 +47,6 @@ const options = {
 
 
 export default function Results({ user }) {
-    const { id } = useParams();
     const [funName, setFunName] = useState('');
     const [code, setCode] = useState('');
     const [name, setName] = useState('you are');
@@ -66,6 +65,7 @@ export default function Results({ user }) {
     const tableRef = useRef(null);
     const chartRef = useRef(null); // allows to see chart elements and options
 
+    const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -180,13 +180,18 @@ export default function Results({ user }) {
         try {
             await navigator.share({
                 title: 'Wooster',
-                text: 'Discover your sense of humor!',
+                text: 'Check out my humor rating!',
                 url: `https://wooster-comedy-e5cd863c8ed6.herokuapp.com/results/${resultId}` // Replace with the URL you want to share
             })
         } catch (err) {
             console.log(err);
         }
     }
+
+    function logOut() {
+        usersServices.logOut();
+        navigate('/');
+    } 
 
     // returns array of score object values ensuring correct order
     function getValues(obj) {
@@ -203,7 +208,9 @@ export default function Results({ user }) {
         <div className="results">
             {data && funName && code ?
                 <>
-                    <i onClick={share} className="fa-solid fa-share-from-square fa-2x"></i>
+                    {id ? <br/>
+                        : <i onClick={share} className="fa-solid fa-share-from-square fa-2x"></i>
+                    }       
                     <p id="you-are">{`${name} a...`}</p>
                     <h1 id="fun-name">{funName}</h1>
                     <h5 id="code">{code}</h5>
@@ -264,7 +271,7 @@ export default function Results({ user }) {
                 :
                 <>
                     <p>fetching data</p>
-                    <p>if this is taking too long click <span onClick={() => usersServices.logOut()}>here</span></p>
+                    <p>if this is taking too long click <span onClick={logOut}>here</span></p>
                 </>
             }
         </div >

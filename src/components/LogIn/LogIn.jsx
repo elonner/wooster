@@ -4,7 +4,7 @@ import * as usersService from '../../utilities/users-service';
 import * as resultsAPI from '../../utilities/results-api';
 import '../../pages/AuthPage/AuthPage.css';
 
-export default function LogIn({ setUser, showLogin, setShowLogin }) {
+export default function LogIn({ setUser, showLogin, setShowLogin, compId }) {
     const [credentials, setCredentials] = useState({
         username: '',
         password: ''
@@ -27,7 +27,7 @@ export default function LogIn({ setUser, showLogin, setShowLogin }) {
             const user = await usersService.login(credentials);
             const survey = await resultsAPI.getLatest(user._id);
             setUser(user); 
-            survey ? navigate('/results') : navigate('/survey');
+            survey ? navigate('/results', { state: { id: compId } }) : navigate('/survey', { state: { id: compId } });
         } catch (err) {
             console.log(err)
             setError('Log In Failed - Try Again');

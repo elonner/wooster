@@ -1,9 +1,13 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import LogIn from '../../components/LogIn/LogIn';
 import SignUp from '../../components/SignUp/SignUp';
 
 export default function AuthPage({ setUser }) {
   const [showLogin, setShowLogin] = useState(false);
+  const location = useLocation();
+  const compId = location.state?.id;
+  console.log(compId);
 
   return (
     <main className="AuthPage">
@@ -12,12 +16,14 @@ export default function AuthPage({ setUser }) {
           setUser={setUser}
           showLogin={showLogin}
           setShowLogin={setShowLogin}
+          compId={compId}
         />
         :
         <SignUp
           setUser={setUser}
           showLogin={showLogin}
           setShowLogin={setShowLogin}
+          compId={compId}
         />}
     </main>
   );

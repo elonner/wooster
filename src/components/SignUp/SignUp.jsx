@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../pages/AuthPage/AuthPage.css';
 
-export default function SignUp({setUser, showLogin, setShowLogin }) {
+export default function SignUp({setUser, showLogin, setShowLogin, compId }) {
     const [credentials, setCredentials] = useState({
         first: '',
         last: '',
@@ -28,7 +28,7 @@ export default function SignUp({setUser, showLogin, setShowLogin }) {
             // in the payload of the JSON Web Token (JWT)
             const user = await signUp(formData);
             setUser(user);
-            navigate('/survey')
+            navigate('/survey', { state: { id: compId } })
         } catch {
             // An error occurred
             // Probably due to a duplicate username
