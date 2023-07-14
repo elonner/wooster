@@ -16,7 +16,6 @@ export default function Survey() {
     const navigate = useNavigate();
 
     const location = useLocation();
-    console.log(location);
 
     const formRef1 = useRef();
     const formRef2 = useRef();

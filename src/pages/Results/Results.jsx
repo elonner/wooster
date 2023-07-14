@@ -47,16 +47,29 @@ const options = {
 
 
 export default function Results({ user }) {
-    const [funName, setFunName] = useState('');
-    const [code, setCode] = useState('');
-    const [name, setName] = useState('you are');
-    const [result, setResult] = useState({});
-    const [resultId, setResultId] = useState(0);
+    // start new
+    const [resultData, setResultData] = useState({
+        scores: {},
+        funName: '',
+        code: '',
+        id: 0,
+        name: ''
+    });
+    const [comparison, setComparison] = useState({
+        scores: null,
+        firstName: ''
+    });
+    // end new
+    //const [funName, setFunName] = useState(''); // ^^
+    //const [code, setCode] = useState(''); // ^^
+    //const [name, setName] = useState('you are'); // ^^
+    //const [result, setResult] = useState({}); // ^^
+    //const [resultId, setResultId] = useState(0); // ^^
     const [average, setAverage] = useState({});
-    const [toCompare, setToCompare] = useState(null);
+    //const [toCompare, setToCompare] = useState(null); // ^
     const [showAverage, setShowAverage] = useState(false);
     const [showCompare, setShowCompare] = useState(false);
-    const [compName, setCompName] = useState('');
+    //const [compName, setCompName] = useState(''); // ^^
     const [data, setData] = useState({});
     const [moreInfo, setMoreInfo] = useState(false);
     const [activeCat, setActiveCat] = useState('');
@@ -65,7 +78,7 @@ export default function Results({ user }) {
     const tableRef = useRef(null);
     const chartRef = useRef(null); // allows to see chart elements and options
 
-    const { id } = useParams();
+    const { sentResultId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -73,25 +86,56 @@ export default function Results({ user }) {
         async function getResult() {
             // upon recieved results
             let res;
-            if (id) {
-                res = await resultsApi.getOne(id);
+            let nameTemp = 'you are';
+            if (sentResultId) {
+                res = await resultsApi.getOne(sentResultId);
                 const user = await usersApi.getOne(res.user);
-                setName(`${user.first} is`);
+                //setName(`${user.first} is`); // v
+                nameTemp = `${user.first} is`;
             } else {
                 res = await resultsApi.getLatest(user._id);
+                if (!res) {
+                    navigate('/survey');
+                    return;
+                }
             }
 
             // after survey completion
             if (location.state?.id) {
                 const toComp = await resultsApi.getOne(location.state.id);
                 const compUser = await usersApi.getOne(toComp.user);
-                setCompName(`${compUser.first}`);
-                setToCompare(toComp.scores);
+                //setCompName(`${compUser.first}`); // v
+                //setToCompare(toComp.scores); // v
+                setComparison({
+                    ...comparison,
+                    scores: toComp.scores,
+                    firstName: compUser.first
+                });
             }
-            setResultId(res._id)
-            setResult(res.scores);
-            setCode(res.code);
-            setFunName('Raging Baffoon');
+
+            // sent results to user with results
+            if (sentResultId) {
+                const toComp = await resultsApi.getLatest(user._id);
+                //setCompName(`${compUser.first}`); // v
+                //setToCompare(toComp.scores); // v
+                setComparison({
+                    ...comparison,
+                    scores: toComp.scores,
+                    firstName: 'my results'
+                });
+            }
+            //setResultId(res._id); // v
+            //setResult(res.scores); // v
+            //setCode(res.code); // v
+            //setFunName('Raging Baffoon'); // v
+            setResultData({
+                ...resultData,
+                scores: res.scores,
+                funName: 'Knee Slap Raging Baffoon',
+                code: res.code,
+                id: res._id,
+                name: nameTemp
+            });
         }
         async function getAverage() {
             const avg = await resultsApi.getAverage();
@@ -112,7 +156,8 @@ export default function Results({ user }) {
         // logic for setting active category 
         let maxKey = '';
         let maxVal = 0;
-        for (const [key, val] of Object.entries(result)) {
+        //for (const [key, val] of Object.entries(result)) {
+        for (const [key, val] of Object.entries(resultData.scores)) {
             if (val > maxVal) {
                 maxVal = val;
                 maxKey = key;
@@ -121,7 +166,8 @@ export default function Results({ user }) {
 
         const datasets = [
             {
-                data: getValues(result),
+                //data: getValues(result),
+                data: getValues(resultData.scores),
                 backgroundColor: 'rgba(220, 172, 0, 0.5)',
                 borderColor: 'rgba(220, 172, 0, 1)',
                 borderWidth: 2
@@ -139,7 +185,8 @@ export default function Results({ user }) {
         if (showCompare) {
             datasets.push({
                 label: '',
-                data: getValues(toCompare),
+                //data: getValues(toCompare),
+                data: getValues(comparison.scores),
                 backgroundColor: 'rgba(255, 0, 0, 0.3)',
                 borderColor: 'rgba(255, 50, 50, 0.7)',
                 borderWidth: 2
@@ -150,7 +197,8 @@ export default function Results({ user }) {
             datasets: datasets
         })
         setActiveCat(maxKey);
-    }, [result, showAverage, showCompare])
+        //}, [result, showAverage, showCompare])
+    }, [resultData, showAverage, showCompare])
 
     // styling for description
     useEffect(() => {
@@ -173,14 +221,16 @@ export default function Results({ user }) {
                 descriptionRef.current.style.height = `${tableRef.current?.clientHeight + 2}px`;
             }
         }
-    }, [result, moreInfo]);
+        //}, [result, moreInfo]);
+    }, [resultData, moreInfo]);
 
     async function share() {
         try {
             await navigator.share({
                 title: 'Wooster',
                 text: 'Check out my humor rating!',
-                url: `https://wooster-comedy-e5cd863c8ed6.herokuapp.com/results/${resultId}` // Replace with the URL you want to share
+                //url: `https://wooster-comedy-e5cd863c8ed6.herokuapp.com/results/${resultId}` // Replace with the URL you want to share
+                url: `https://wooster-comedy-e5cd863c8ed6.herokuapp.com/results/${resultData.id}` // Replace with the URL you want to share
             })
         } catch (err) {
             console.log(err);
@@ -190,7 +240,7 @@ export default function Results({ user }) {
     function logOut() {
         usersServices.logOut();
         navigate('/');
-    } 
+    }
 
     // returns array of score object values ensuring correct order
     function getValues(obj) {
@@ -205,42 +255,50 @@ export default function Results({ user }) {
 
     return (
         <div className="results">
-            {data && funName && code ?
+            {/* {data && funName && code ? */}
+            {data && resultData.id ?
                 <>
-                    {id ? <br/>
+                    {sentResultId ? <br />
                         : <i onClick={share} className="fa-solid fa-share-from-square fa-2x"></i>
-                    }       
-                    <p id="you-are">{`${name} a...`}</p>
+                    }
+                    {/* <p id="you-are">{`${name} a...`}</p>
                     <h1 id="fun-name">{funName}</h1>
-                    <h5 id="code">{code}</h5>
+                    <h5 id="code">{code}</h5> */}
+                    <p id="you-are">{`${resultData.name} a...`}</p>
+                    <h1 id="fun-name">{resultData.funName}</h1>
+                    <h5 id="code">{resultData.code}</h5>
                     <label className='compare-label average'>
-                        <input 
-                            onChange={() => setShowAverage(!showAverage)} 
-                            className='compare-input average' 
-                            type="checkbox" 
+                        <input
+                            onChange={() => setShowAverage(!showAverage)}
+                            className='compare-input average'
+                            type="checkbox"
                         />
                         show average
                     </label>
-                    {toCompare ?
+                    {/* {toCompare ? */}
+                    {comparison.scores ?
                         <label className='compare-label user'>
-                            <input 
-                                onChange={() => setShowCompare(!showCompare)} 
-                                className='compare-input user' 
-                                type="checkbox" 
-                                />
-                            {compName}
+                            <input
+                                onChange={() => setShowCompare(!showCompare)}
+                                className='compare-input user'
+                                type="checkbox"
+                            />
+                            {/* {compName} */}
+                            {comparison.firstName}
                         </label>
                         :
                         null
                     }
                     <div id="radar">
+                        {console.log(data)}
                         <Radar data={data} options={options} ref={chartRef} />
                     </div>
                     <div className="info">
                         <div ref={tableRef} className="table-container">
                             <table className="table">
                                 <tbody>
-                                    {Object.entries(result).sort((a, b) => b[1] - a[1]).map((cat, idx) => {
+                                    {/* {Object.entries(result).sort((a, b) => b[1] - a[1]).map((cat, idx) => { */}
+                                    {Object.entries(resultData.scores).sort((a, b) => b[1] - a[1]).map((cat, idx) => {
                                         return (
                                             <tr key={idx}>
                                                 <td onClick={() => setActiveCat(cat[0])} className="left-col">{cat[0]}</td>
@@ -257,14 +315,23 @@ export default function Results({ user }) {
                             <i className={`fa-solid plus ${moreInfo ? "fa-minus" : "fa-plus"}`}></i>
                         </div>
                     </div>
-                    {id ?
-                        <div className="btn-container">
-                            <button onClick={() => navigate('/survey', { state: { id: id } })} className='sbmt-btn'>Take Quiz!</button>
-                        </div>
+                    {sentResultId ?
+                        <>
+                            <p className="switchForms take-again"></p>
+                            <div className="btn-container">
+                                <button onClick={() => navigate('/survey', { state: { id: sentResultId } })} className='sbmt-btn'>Take Quiz!</button>
+                            </div>
+                        </>
                         :
-                        <div className="btn-container">
-                            <button onClick={share} className='sbmt-btn'>Share Your Results!</button>
-                        </div>
+                        <>
+                            <p className="switchForms take-again">Make a mistake?
+                                &nbsp;
+                                <span onClick={() => navigate('/survey')} className='switchLink'>take again</span>
+                            </p>
+                            <div className="btn-container">
+                                <button onClick={share} className='sbmt-btn'>Share Your Results!</button>
+                            </div>
+                        </>
                     }
                 </>
                 :
