@@ -13,6 +13,13 @@ i:active {
     color: var(--main-dark)
 }
 
+.my-results {
+    align-self: flex-end;
+    margin: 15px 20px 0 0;
+    color: grey;
+    font-size: 14px;
+}
+
 #you-are {
     margin-left: 20px;
 }

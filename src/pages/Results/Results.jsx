@@ -73,6 +73,8 @@ export default function Results({ user }) {
     const [data, setData] = useState({});
     const [moreInfo, setMoreInfo] = useState(false);
     const [activeCat, setActiveCat] = useState('');
+    const [showResultsLink, setShowResultsLink] = useState(false);
+    const [navPage, setNavPage] = useState(false);
 
     const descriptionRef = useRef(null);
     const tableRef = useRef(null);
@@ -95,7 +97,7 @@ export default function Results({ user }) {
             } else {
                 res = await resultsApi.getLatest(user._id);
                 if (!res) {
-                    navigate('/survey');
+                    handleNavigate('/survey');
                     return;
                 }
             }
@@ -114,15 +116,18 @@ export default function Results({ user }) {
             }
 
             // sent results to user with results
-            if (sentResultId) {
+            if (sentResultId && user) {
                 const toComp = await resultsApi.getLatest(user._id);
                 //setCompName(`${compUser.first}`); // v
                 //setToCompare(toComp.scores); // v
-                setComparison({
-                    ...comparison,
-                    scores: toComp.scores,
-                    firstName: 'my results'
-                });
+                if (toComp) {
+                    setShowResultsLink(true);
+                    setComparison({
+                        ...comparison,
+                        scores: toComp.scores,
+                        firstName: 'my results'
+                    });
+                }
             }
             //setResultId(res._id); // v
             //setResult(res.scores); // v
@@ -143,7 +148,8 @@ export default function Results({ user }) {
         }
         getResult();
         getAverage();
-    }, []);
+        setNavPage(false);
+    }, [navPage]);
 
     // sets active category and data
     useEffect(() => {
@@ -239,7 +245,7 @@ export default function Results({ user }) {
 
     function logOut() {
         usersServices.logOut();
-        navigate('/');
+        handleNavigate('/');
     }
 
     // returns array of score object values ensuring correct order
@@ -253,13 +259,23 @@ export default function Results({ user }) {
         return vals;
     }
 
+    function handleNavigate(path, options) {
+        navigate(`${path}`, options);
+        setNavPage(true);
+    }
+
     return (
         <div className="results">
             {/* {data && funName && code ? */}
             {data && resultData.id ?
                 <>
-                    {sentResultId ? <br />
-                        : <i onClick={share} className="fa-solid fa-share-from-square fa-2x"></i>
+                    {sentResultId ? 
+                        showResultsLink ? 
+                            <p onClick={() => handleNavigate('/results')} className='switchLink my-results'>my results</p>
+                            :
+                            <br/>
+                        : 
+                        <i onClick={share} className="fa-solid fa-share-from-square fa-2x"></i>
                     }
                     {/* <p id="you-are">{`${name} a...`}</p>
                     <h1 id="fun-name">{funName}</h1>
@@ -319,14 +335,14 @@ export default function Results({ user }) {
                         <>
                             <p className="switchForms take-again"></p>
                             <div className="btn-container">
-                                <button onClick={() => navigate('/survey', { state: { id: sentResultId } })} className='sbmt-btn'>Take Quiz!</button>
+                                <button onClick={() => handleNavigate('/survey', { state: { id: sentResultId } })} className='sbmt-btn'>Take Quiz!</button>
                             </div>
                         </>
                         :
                         <>
                             <p className="switchForms take-again">Make a mistake?
                                 &nbsp;
-                                <span onClick={() => navigate('/survey')} className='switchLink'>take again</span>
+                                <span onClick={() => handleNavigate('/survey')} className='switchLink'>take again</span>
                             </p>
                             <div className="btn-container">
                                 <button onClick={share} className='sbmt-btn'>Share Your Results!</button>
