@@ -1,7 +1,14 @@
 .survey {
     background-color: var(--main-light);
     min-height: 100vh;
-    padding: 20px 10px 100px 10px;
+    padding: 10px 10px 100px 10px;
+}
+
+.results-link {
+    color: grey;
+    margin: 0 0 10px 0;
+    right: 10px;
+    text-align: end;
 }
 
 .section {

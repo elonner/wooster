@@ -5,14 +5,15 @@ import SecOneQues from "../../components/Questions/SecOneQues";
 import SecTwoQues from "../../components/Questions/SecTwoQues";
 import SecThreeQues from "../../components/Questions/SecThreeQues";
 import { getUser } from "../../utilities/users-service";
-import { newResult } from "../../utilities/results-api";
+import { newResult, getLatest } from "../../utilities/results-api";
 import './Survey.css';
 
-export default function Survey() {
+export default function Survey({ user }) {
     const [section, setSection] = useState(1);
     const [survey, setSurvey] = useState(null);
     const [answers, setAnswers] = useState([]);
     const [isPrivate, setIsPrivate] = useState(false);
+    const [hasResults, setHasResults] = useState(false);
     const navigate = useNavigate();
 
     const location = useLocation();
@@ -26,7 +27,12 @@ export default function Survey() {
             const surveyJson = await sendRequest('/api/survey');
             setSurvey(surveyJson);
         }
+        async function getResults() {
+            const results = await getLatest(user._id);
+            if (results) setHasResults(true);
+        }
         getSurvey();
+        getResults();
     }, []);
 
     useEffect(() => {
@@ -71,6 +77,11 @@ export default function Survey() {
 
     return (
         <div className="survey">
+            {hasResults ?
+                <p onClick={() => navigate('/results')} className="switchLink results-link">my results</p>
+                :
+                null
+            }
             {section === 1 && (
                 <form className="section section-one" ref={formRef1}>
                     <h2 className="section-title">Shows & Movies</h2>

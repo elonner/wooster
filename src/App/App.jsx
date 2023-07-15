@@ -14,7 +14,7 @@ export default function App() {
         <Routes>
           <Route path='/results/:sentResultId' element={<Results user={user} />} />
           <Route path='/results' element={<Results user={user} />} />
-          <Route path="/survey" element={<Survey />} />
+          <Route path="/survey" element={<Survey user={user} />} />
           <Route path="/*" element={<Results user={user} />} />
         </Routes>
         :
