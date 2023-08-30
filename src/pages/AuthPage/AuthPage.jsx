@@ -7,7 +7,6 @@ export default function AuthPage({ setUser }) {
   const [showLogin, setShowLogin] = useState(false);
   const location = useLocation();
   const compId = location.state?.id;
-  console.log(compId);
 
   return (
     <main className="AuthPage">
